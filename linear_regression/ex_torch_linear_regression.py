@@ -15,13 +15,14 @@ import torch
 # Device Setup (use GPU if available)
 # ========================================
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
 
 # ========================================
 # Create the training data set
 # ========================================
 
 # Model Inputs
-X = torch.arange(0, 11, dtype=torch.float32, device=device)  # Use float for better accuracy
+X = torch.arange(0, 10, dtype=torch.float32, device=device)  # Use float for better accuracy
 
 # Compute True Outputs
 a_true = 2.0
@@ -31,9 +32,9 @@ Y = a_true * X + b_true
 # ========================================
 # Initialize Training Parameters
 # ========================================
-# Parameters with gradient tracking
-a = torch.nn.Parameter(torch.tensor(0.0, device=device))
-b = torch.nn.Parameter(torch.tensor(0.0, device=device))
+# Random initialization with small values
+a = torch.nn.Parameter(torch.randn(1, device=device) * 0.01)
+b = torch.nn.Parameter(torch.randn(1, device=device) * 0.01)
 
 # ========================================
 # Define Model for Training
@@ -44,7 +45,7 @@ def forward(X):
     return a * X + b
 
 # Loss = MSE
-loss_fn = torch.nn.MSELoss()
+loss = torch.nn.MSELoss()
 
 print(f'Prediction before training: f(5) = {forward(torch.tensor(5.0, device=device)).item():.3f}')
 
@@ -52,28 +53,28 @@ print(f'Prediction before training: f(5) = {forward(torch.tensor(5.0, device=dev
 # Training
 # ========================================
 learning_rate = 0.01
-n_iters = 2000
+n_iters = 1200
 
 # Optimizer setup
-optimizer = torch.optim.SGD([a, b], lr=learning_rate)
+optimizer = torch.optim.RMSprop([a, b], lr=learning_rate)
 
 for epoch in range(n_iters):
     # Predict (forward pass)
     Yhat = forward(X)
 
     # Compute the loss
-    l = loss_fn(Y, Yhat)
+    l = loss(Y, Yhat)
 
     # Backward pass (compute gradients)
     l.backward()
 
-    # Update parameters
+    # Update parameters (using gradients)
     optimizer.step()
 
     # Zero the gradients after updating
     optimizer.zero_grad()
 
-    # Logging progress every 10 epochs
+    # Logging progress
     if (epoch + 1) % 200 == 0:
         print(f'Epoch {epoch + 1}: a = {a.item():.3f}, b = {b.item():.3f}, Loss = {l.item():.8f}')
 
