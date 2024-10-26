@@ -15,6 +15,7 @@ import torch
 # Device Setup (use GPU if available)
 # ========================================
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(device)
 
 # ========================================
 # Create the training data set
@@ -44,7 +45,7 @@ def forward(X):
     return a * X + b
 
 # Loss = MSE
-loss_fn = torch.nn.MSELoss()
+loss = torch.nn.MSELoss()
 
 print(f'Prediction before training: f(5) = {forward(torch.tensor(5.0, device=device)).item():.3f}')
 
@@ -62,7 +63,7 @@ for epoch in range(n_iters):
     Yhat = forward(X)
 
     # Compute the loss
-    l = loss_fn(Y, Yhat)
+    l = loss(Y, Yhat)
 
     # Backward pass (compute gradients)
     l.backward()
