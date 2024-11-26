@@ -22,12 +22,12 @@ print(device)
 # Create Training Parameters
 # ========================================
 # Random initialization with small values
-mp = torch.nn.Parameter(0.1)
-mc = torch.nn.Parameter(0.25)
-l = torch.nn.Parameter(0.5)
-k = torch.nn.Parameter(1.2)
-bp = torch.nn.Parameter(0.0001)
-bc = torch.nn.Parameter(0.002)
+mp = torch.nn.Parameter(torch.tensor(0.1, dtype=torch.float32, device=device))
+mc = torch.nn.Parameter(torch.tensor(0.25, dtype=torch.float32, device=device))
+l = torch.nn.Parameter(torch.tensor(0.5, dtype=torch.float32, device=device))
+k = torch.nn.Parameter(torch.tensor(0.25, dtype=torch.float32, device=device))
+bp = torch.nn.Parameter(torch.tensor(0.001, dtype=torch.float32, device=device))
+bc = torch.nn.Parameter(torch.tensor(0.002, dtype=torch.float32, device=device))
 g = 9.81
 
 
